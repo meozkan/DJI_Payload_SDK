@@ -54,6 +54,8 @@ extern "C" {
 
 #define CONFIG_MODULE_SAMPLE_DATA_TRANSMISSION_ON
 
+#define CONFIG_MODULE_SAMPLE_FC_SUBSCRIPTION_ON
+
 /* Exported types ------------------------------------------------------------*/
 
 /* Exported functions --------------------------------------------------------*/

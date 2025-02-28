@@ -52,6 +52,7 @@
 #include "widget/test_widget_speaker.h"
 #include <power_management/test_power_management.h>
 #include "data_transmission/test_data_transmission.h"
+#include "fc_subscription/test_fc_subscription.h"
 #include <fc_subscription/FC_Subscription.hpp>
 #include <cstddef>
 #include <cstdio>
@@ -94,7 +95,6 @@ static T_DjiReturnCode DjiTest_WriteHighPowerApplyPin(E_DjiPowerManagementPinSta
 DJI_M300RTK::DJI_M300RTK(const std::string _fileName)
     : fileName(_fileName), pollPeriodSpan((unsigned)200u)
 {
-    pFCSubscriptionData=&fcSubscriptionData;
 
     ///DjiUser_SetupEnvironment
     T_DjiReturnCode returnCode;
@@ -257,7 +257,6 @@ DJI_M300RTK::DJI_M300RTK(const std::string _fileName)
         .modifyVersion = 0,
         .debugVersion = 0,
     };
-
     #if DJI_USE_SDK_CONFIG_BY_JSON
         DjiUserConfigManager_GetAppInfo(&userInfo);
     #else
@@ -267,16 +266,17 @@ DJI_M300RTK::DJI_M300RTK(const std::string _fileName)
     }
     #endif
 
+
     returnCode = DjiCore_Init(&userInfo);
     if (returnCode != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
         sleep(1);
         throw std::runtime_error("Core init error.");
     }
 
-    if (aircraftInfoBaseInfo.mountPosition != DJI_MOUNT_POSITION_EXTENSION_PORT
-        && DJI_MOUNT_POSITION_EXTENSION_LITE_PORT != aircraftInfoBaseInfo.mountPosition) {
-        throw std::runtime_error("Please run this sample on extension port.");
-    }
+    //if (aircraftInfoBaseInfo.mountPosition != DJI_MOUNT_POSITION_EXTENSION_PORT
+    //    && DJI_MOUNT_POSITION_EXTENSION_LITE_PORT != aircraftInfoBaseInfo.mountPosition) {
+    //    throw std::runtime_error("Please run this sample on extension port.");
+    //}
 
     returnCode = DjiCore_SetAlias("PSDK_APPALIAS");
     if (returnCode != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
@@ -287,8 +287,6 @@ DJI_M300RTK::DJI_M300RTK(const std::string _fileName)
     if (returnCode != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
         throw std::runtime_error("Set firmware version error.");
     }
-
-    returnCode = DjiCore_SetSerialNumber("PSDK12345678XX");
     if (returnCode != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
         throw std::runtime_error("Set serial number error");
     }
@@ -304,6 +302,14 @@ DJI_M300RTK::DJI_M300RTK(const std::string _fileName)
         returnCode = DjiTest_CameraEmuMediaStartService();
         if (returnCode != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
             USER_LOG_ERROR("camera emu media init error");
+        }
+    #endif
+
+
+    #ifdef CONFIG_MODULE_SAMPLE_FC_SUBSCRIPTION_ON
+        returnCode = DjiTest_FcSubscriptionStartService();
+        if (returnCode != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+            USER_LOG_ERROR("data subscription sample init error\n");
         }
     #endif
 
@@ -352,6 +358,7 @@ DJI_M300RTK::DJI_M300RTK(const std::string _fileName)
         }
     #endif
 
+
     returnCode = DjiCore_ApplicationStart();
     if (returnCode != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
         throw std::runtime_error("Start sdk application error.");
@@ -361,6 +368,8 @@ DJI_M300RTK::DJI_M300RTK(const std::string _fileName)
     Osal_TaskSleepMs(3000);
 
     fcSubscription=new FC_Subscription();
+
+    //fcSubscription->getSubscriptionData(pFCSubscriptionData);
 }
 
 DJI_M300RTK::~DJI_M300RTK()
@@ -541,11 +550,11 @@ T_DjiReturnCode DJI_M300RTK::connect()
                         << "AltitudeBarometerTimerstamp(millisec,microsec), "
                         << "AltitudeOfHomePoint, "
                         << "AltitudeOfHomePointTimerstamp(millisec,microsec), "
-                        << "HeightFusion, "
+                        << "HeightFusion, " 
                         << "HeightFusionTimerstamp(millisec,microsec), "
                         << "HeightRelative, "
                         << "HeightRelativeTimerstamp(millisec,microsec), "
-                        << "PositionFused (longitude, latitude, altitude, NumVisiableServer), "
+                        << "PositionFused (longitude, latitude, altitude), "
                         << "PositionFusedTimerstamp(millisec,microsec), "
                         << "Compass(x,y,z), "
                         << "CompassTimerstamp(millisec,microsec), "
@@ -553,8 +562,8 @@ T_DjiReturnCode DJI_M300RTK::connect()
                         << "FlightStatusTimerstamp(millisec,microsec), "
                         << "PositionVO (x,y,z), "
                         << "PositionVOTimerstamp(millisec,microsec), "
-                        << "ImuAttiNaviDataWithTimestamp (pn_x, pn_y, pn_z, vn_x, vn_y, vn_z, an_x, an_y, an_z, q1, q2, q3, q4, resv,cnt  ), "
-                        << "ImuAttiNaviDataWithTimestampTimerstamp(millisec,microsec), "
+                        << "ImuAttiNaviDataWithTimestamp (pn_x, pn_y, pn_z, vn_x, vn_y, vn_z, an_x, an_y, an_z, q1, q2, q3, q4, resv, cnt), "
+                        << "ImuAttiNaviDataWithTimestampTimerstamp(millisec,microsec)"
                         <<'\n';
 
     }
@@ -566,6 +575,21 @@ T_DjiReturnCode DJI_M300RTK::run()
 {
     int64_t prevtimePeriodForTimeStamp=0;
 
+    // Now let's block SIGUSR1
+    sigset_t sigset;
+    sigemptyset(&sigset);
+    sigaddset(&sigset, SIGUSR1);
+    sigprocmask(SIG_BLOCK, &sigset, NULL);
+
+    // SIGUSR1 is now blocked and pending -- this call to sigwait will return
+    // immediately
+    int sig;
+    int result = sigwait(&sigset, &sig);
+    if(result == 0)
+        printf("sigwait got signal: %d\n", sig);
+
+    isStart=true;
+
     // acquire a single snapshot
     while(!isStop) {
         if(isStart){
@@ -573,9 +597,15 @@ T_DjiReturnCode DJI_M300RTK::run()
             auto lastSnapTime = std::chrono::steady_clock::now();
 
             if (MutexForCopyData.try_lock_for(std::chrono::milliseconds(5))){
-                FCSubscriptionDataTmp=(*pFCSubscriptionData);
+                FCSubscriptionDataTmp=fcSubscription->getSubscriptionData();
                 MutexForCopyData.unlock();
             }
+
+            //cout<<"QUA1:"<<pFCSubscriptionData->Quaternion.q0<<endl;
+            //cout<<"QUA1:"<<FCSubscriptionDataTmp.Quaternion.q0<<endl;
+
+            //printf("QUA1: %lf \n",pFCSubscriptionData->Quaternion.q0);
+            //printf("QUA2: %lf \n",FCSubscriptionDataTmp.Quaternion.q0);
 
             if (fileRecorder->is_open()){
 
@@ -706,7 +736,7 @@ T_DjiReturnCode DJI_M300RTK::run()
                 << FCSubscriptionDataTmp.ImuAttiNaviDataWithTimestamp.cnt <<", "
                 // "ImuAttiNaviDataWithTimestampTimerstamp(millisec,microsec), "
                 << FCSubscriptionDataTmp.ImuAttiNaviDataWithTimestampTimestamp.millisecond << ", "
-                << FCSubscriptionDataTmp.ImuAttiNaviDataWithTimestampTimestamp.microsecond << ", " 
+                << FCSubscriptionDataTmp.ImuAttiNaviDataWithTimestampTimestamp.microsecond 
                 <<'\n';
         
             }
@@ -735,102 +765,138 @@ T_DjiReturnCode DJI_M300RTK::disConnect()
         USER_LOG_ERROR("UnSubscribe topic quaternion error.");
         return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
     }
+    else
+        USER_LOG_INFO("-->UnSubscribe the topic quaternion...");
 
     djiStat = fcSubscription->SubscribeTopicAccelerationGround(NULL,false);
     if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
         USER_LOG_ERROR("UnSubscribe topic AccelerationGround error.");
         return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
     }
+    else
+        USER_LOG_INFO("-->UnSubscribe the topic AccelerationGround...");
+
+
 
     djiStat = fcSubscription->SubscribeTopicAccelerationBody(NULL,false);
     if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
         USER_LOG_ERROR("UnSubscribe topic AccelerationBody error.");
         return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
     }
+     else
+        USER_LOG_INFO("-->UnSubscribe the topic AccelerationBody...");
 
     djiStat = fcSubscription->SubscribeTopicAccelerationRaw(NULL,false);
     if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
         USER_LOG_ERROR("UnSubscribe topic AccelerationRaw error.");
         return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
     }
+     else
+        USER_LOG_INFO("-->UnSubscribe the topic AccelerationRaw...");
 
     djiStat = fcSubscription->SubscribeTopicVelocity(NULL,false);
     if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
         USER_LOG_ERROR("UnSubscribe topic Velocity error.");
         return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
     }
+     else
+        USER_LOG_INFO("-->UnSubscribe the topic Velocity...");
 
     djiStat = fcSubscription->SubscribeTopicAngularRateFusioned(NULL,false);
     if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
         USER_LOG_ERROR("UnSubscribe topic AngularRateFusioned error.");
         return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
     }
+     else
+        USER_LOG_INFO("-->UnSubscribe the topic AngularRateFusioned...");
 
     djiStat = fcSubscription->SubscribeTopicAngularRateRaw(NULL,false);
     if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
         USER_LOG_ERROR("UnSubscribe topic AngularRateRaw error.");
         return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
     }
+     else
+        USER_LOG_INFO("-->UnSubscribe the topic AngularRateRaw...");
 
     djiStat = fcSubscription->SubscribeTopicAltitudeFused(NULL,false);
     if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
         USER_LOG_ERROR("UnSubscribe topic AltitudeFused error.");
         return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
     }
+     else
+        USER_LOG_INFO("-->UnSubscribe the topic AltitudeFused...");
 
     djiStat = fcSubscription->SubscribeTopicAltitudeBarometer(NULL,false);
     if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
         USER_LOG_ERROR("UnSubscribe topic AltitudeBarometer error.");
         return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
     }
+     else
+        USER_LOG_INFO("-->UnSubscribe the topic AltitudeBarometer...");
 
     djiStat = fcSubscription->SubscribeTopicAltitudeOfHomePoint(NULL,false);
     if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
         USER_LOG_ERROR("UnSubscribe topic AltitudeOfHomePoint error.");
         return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
     }
+     else
+        USER_LOG_INFO("-->UnSubscribe the topic AltitudeOfHomePoint...");
 
     djiStat = fcSubscription->SubscribeTopicHeightFusion(NULL,false);
     if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
         USER_LOG_ERROR("UnSubscribe topic HeightFusion error.");
         return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
     }
+     else
+        USER_LOG_INFO("-->UnSubscribe the topic HeightFusion...");
 
     djiStat = fcSubscription->SubscribeTopicHeightRelative(NULL,false);
     if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
         USER_LOG_ERROR("UnSubscribe topic HeightRelative error.");
         return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }  
+    } 
+     else
+        USER_LOG_INFO("-->UnSubscribe the topic HeightRelative..."); 
     
     djiStat = fcSubscription->SubscribeTopicPositionFused(NULL,false);
     if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
         USER_LOG_ERROR("UnSubscribe topic PositionFused error.");
         return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }  
+    }
+     else
+        USER_LOG_INFO("-->UnSubscribe the topic PositionFused...");  
 
     djiStat = fcSubscription->SubscribeTopicFlightStatus(NULL,false);
     if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
         USER_LOG_ERROR("UnSubscribe topic FlightStatus error.");
         return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }  
+    }
+     else
+        USER_LOG_INFO("-->UnSubscribe the topic FlightStatus...");  
 
     djiStat = fcSubscription->SubscribeTopicCompass(NULL,false);
     if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
         USER_LOG_ERROR("UnSubscribe topic Compass error.");
         return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    } 
+    }
+     else
+        USER_LOG_INFO("-->UnSubscribe the topic Compass..."); 
 
     djiStat = fcSubscription->SubscribeTopicPositionVO(NULL,false);
     if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
         USER_LOG_ERROR("UnSubscribe topic PositionVO error.");
         return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
     } 
+     else
+        USER_LOG_INFO("-->UnSubscribe the topic PositionVO...");
 
     djiStat = fcSubscription->SubscribeTopicImuAttiNaviDataWithTimestamp(NULL,false);
     if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
         USER_LOG_ERROR("UnSubscribe topic ImuAttiNaviDataWithTimestamp error.");
         return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
     } 
+     else
+        USER_LOG_INFO("-->UnSubscribe the topic ImuAttiNaviDataWithTimestamp...");
 
     USER_LOG_INFO("--> Deinit fc subscription module");
 
@@ -846,10 +912,14 @@ T_DjiReturnCode DJI_M300RTK::disConnect()
 
 void DJI_M300RTK::SignalHandler(int sig)
 {
-    if(sig==SIGINT)
+    if(sig==SIGINT){
+        std::cout<<"SIGINT: Exiting..."<<std::endl;
         isStop=true;
-    if(sig==SIGUSR1)
+    }    
+    if(sig==SIGUSR1){
+        std::cout<<"SIGUSR1: Recording..."<<std::endl;
         isStart=true;
+    }
 }
 
 T_DjiReturnCode DJI_M300RTK::DjiUser_PrintConsole(const uint8_t *data, uint16_t dataLen)

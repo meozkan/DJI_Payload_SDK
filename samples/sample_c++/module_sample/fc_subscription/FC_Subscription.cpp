@@ -38,7 +38,7 @@
 
 
 /* Private values -------------------------------------------------------------*/
-  
+static FC_SubscriptionData fcSubscriptionData;
 
 /* Private functions declaration ---------------------------------------------*/
 static T_DjiReturnCode Dji_FcSubscriptionReceiveQuaternionCallback(const uint8_t *data, uint16_t dataSize, const T_DjiDataTimestamp *timestamp);
@@ -113,6 +113,13 @@ static T_DjiReturnCode Dji_FcSubscriptionReceiveImuAttiNaviDataWithTimestampCall
 */
 
 /* Exported functions definition ---------------------------------------------*/
+
+
+ FC_SubscriptionData FC_Subscription::getSubscriptionData()
+ {
+    return fcSubscriptionData;
+ }
+
 
 FC_Subscription::FC_Subscription(){
 
@@ -332,7 +339,7 @@ T_DjiReturnCode FC_Subscription::SubscribeTopicAltitudeOfHomePoint(DjiReceiveDat
     T_DjiReturnCode djiStat;
 
     if(subscribe_unsubscribe){
-        djiStat = DjiFcSubscription_SubscribeTopic(DJI_FC_SUBSCRIPTION_TOPIC_ALTITUDE_OF_HOMEPOINT, DJI_DATA_SUBSCRIPTION_TOPIC_50_HZ,
+        djiStat = DjiFcSubscription_SubscribeTopic(DJI_FC_SUBSCRIPTION_TOPIC_ALTITUDE_OF_HOMEPOINT, DJI_DATA_SUBSCRIPTION_TOPIC_1_HZ,
             Dji_FcSubscriptionReceiveAltitudeOfHomePointCallback);
         if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
             USER_LOG_ERROR("Subscribe topic AltitudeOfHomePoint error.");
@@ -587,6 +594,8 @@ static T_DjiReturnCode Dji_FcSubscriptionReceiveQuaternionCallback(const uint8_t
     T_DjiFcSubscriptionQuaternion *quaternion = (T_DjiFcSubscriptionQuaternion *) data;
     fcSubscriptionData.Quaternion=(*quaternion);
     fcSubscriptionData.QuaternionTimestamp=(*timestamp);
+
+
     
     USER_UTIL_UNUSED(dataSize);
     
@@ -738,7 +747,7 @@ static T_DjiReturnCode Dji_FcSubscriptionReceiveFlightStatusCallback(const uint8
 {
     T_DjiFcSubscriptionFlightStatus *FlightStatus = (T_DjiFcSubscriptionFlightStatus *) data;
     fcSubscriptionData.FlightStatus=(*FlightStatus);
-    fcSubscriptionData.FlightStatusTimestamp=(*timestamp);
+    fcSubscriptionData.FlightStatusTimestamp=(*timestamp); 
     
     USER_UTIL_UNUSED(dataSize);
     return DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS;

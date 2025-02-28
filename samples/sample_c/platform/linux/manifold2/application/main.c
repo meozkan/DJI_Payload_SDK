@@ -195,6 +195,7 @@ int main(int argc, char **argv)
     if (aircraftInfoBaseInfo.mountPosition == DJI_MOUNT_POSITION_EXTENSION_PORT &&
         (aircraftInfoBaseInfo.aircraftType == DJI_AIRCRAFT_TYPE_M300_RTK ||
          aircraftInfoBaseInfo.aircraftType == DJI_AIRCRAFT_TYPE_M350_RTK)) {
+#ifdef CONFIG_MODULE_SAMPLE_WIDGET_SPEAKER_ON
         returnCode = DjiTest_WidgetInteractionStartService();
         if (returnCode != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
             USER_LOG_ERROR("widget interaction sample init error");
@@ -204,7 +205,7 @@ int main(int argc, char **argv)
         if (returnCode != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
             USER_LOG_ERROR("widget speaker test init error");
         }
-
+#endif
 #ifdef CONFIG_MODULE_SAMPLE_UPGRADE_ON
         T_DjiTestUpgradePlatformOpt linuxUpgradePlatformOpt = {
             .rebootSystem = DjiUpgradePlatformLinux_RebootSystem,

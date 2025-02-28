@@ -48,7 +48,7 @@ using namespace std;
 
 class DJI_M300RTK {
 public:
-    DJI_M300RTK(const std::string ="dataset");
+    DJI_M300RTK(const std::string ="datasetDJI.csv");
     ~DJI_M300RTK();
 
     T_DjiReturnCode connect();

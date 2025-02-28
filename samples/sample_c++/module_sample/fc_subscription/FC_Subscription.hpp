@@ -117,7 +117,6 @@ typedef struct FC_DATA {
   T_DjiDataTimestamp ImuAttiNaviDataWithTimestampTimestamp;
 } FC_SubscriptionData;
 
-static FC_SubscriptionData fcSubscriptionData;
 
 using namespace std;
 
@@ -125,6 +124,11 @@ class FC_Subscription {
 public:
     FC_Subscription();
     ~FC_Subscription();
+
+    
+
+    FC_SubscriptionData getSubscriptionData();
+
 
      /*!
      * @brief Quaternion of aircraft topic name. Quaternion topic provides aircraft body frame (FRD) to ground frame

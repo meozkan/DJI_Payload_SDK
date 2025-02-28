@@ -58,11 +58,17 @@ DJI_M300RTK *dji_M300rtk;
 
 int main(int argc, char **argv)
 {
+
     T_DjiOsalHandler *osalHandler = DjiPlatform_GetOsalHandler();
-    T_DjiReturnCode returnCode;
+    T_DjiReturnCode returnCode;  
+    try{
+        dji_M300rtk = new DJI_M300RTK();
+    }
+    catch(const runtime_error& error)
+    {
+        std::cout<<"DJI_M300RTK Constractor error: "<<error.what()<<std::endl;
 
-    dji_M300rtk = new DJI_M300RTK();
-
+    }
     std::cout<<"Connecting..."<<std::endl;
     if(DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS!=dji_M300rtk->connect()){
         std::cout<<"not connect... Exiting..."<<std::endl;
