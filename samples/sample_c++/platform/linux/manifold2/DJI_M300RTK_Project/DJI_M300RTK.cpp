@@ -60,6 +60,13 @@
 #include <unistd.h>
 #include <stdio.h>
 
+//SYNCH    
+    static const char* SEM_TRIGGER = "/p1_trigger";
+    static const char* SEM_ACK     = "/p1_ack";
+
+
+
+
 /* Private constants ---------------------------------------------------------*/
 #define DJI_LOG_PATH                    "Logs/DJI"
 #define DJI_LOG_INDEX_FILE_NAME         "Logs/index"
@@ -363,7 +370,7 @@ DJI_M300RTK::DJI_M300RTK(const std::string _fileName)
     if (returnCode != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
         throw std::runtime_error("Start sdk application error.");
     }
-    USER_LOG_INFO("Application start.");
+    USER_LOG_INFO("NEW: Application start.");
     
     Osal_TaskSleepMs(3000);
 
@@ -379,6 +386,20 @@ DJI_M300RTK::~DJI_M300RTK()
 
 T_DjiReturnCode DJI_M300RTK::connect()
 {
+     /* open semaphores already created by the controller */
+    trig = sem_open(SEM_TRIGGER, 0);
+    if (trig == SEM_FAILED) {
+        std::perror("[DJI_M300RTK] sem_open trigger");
+        return 0;
+    }
+    ack = sem_open(SEM_ACK, 0);
+    if (ack == SEM_FAILED) {
+        std::perror("[DJI_M300RTK] sem_open ack");
+        sem_close(trig);
+        return 0;
+    }
+
+
     T_DjiReturnCode djiStat;
     T_DjiOsalHandler *osalHandler = DjiPlatform_GetOsalHandler();
     
@@ -511,15 +532,15 @@ T_DjiReturnCode DJI_M300RTK::connect()
     }  
 
      //-------------------------
-    //Configure the signal
-    fd_set readfds;
-    struct sigaction sa;
+    // //Configure the signal
+    // fd_set readfds;
+    // struct sigaction sa;
 
-    sa.sa_handler = DJI_M300RTK::SignalHandler;     /* Establish signal handler */
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = 0;
-    sigaction(SIGINT, &sa, NULL);
-    sigaction(SIGUSR1, &sa, NULL);
+    // sa.sa_handler = DJI_M300RTK::SignalHandler;     /* Establish signal handler */
+    // sigemptyset(&sa.sa_mask);
+    // sa.sa_flags = 0;
+    // sigaction(SIGINT, &sa, NULL);
+    // sigaction(SIGUSR1, &sa, NULL);
 
 
     //Open File for records
@@ -573,33 +594,61 @@ T_DjiReturnCode DJI_M300RTK::connect()
 
 T_DjiReturnCode DJI_M300RTK::run()
 {
-    int64_t prevtimePeriodForTimeStamp=0;
+    //int64_t prevtimePeriodForTimeStamp=0;
 
-    // Now let's block SIGUSR1
-    sigset_t sigset;
-    sigemptyset(&sigset);
-    sigaddset(&sigset, SIGUSR1);
-    sigprocmask(SIG_BLOCK, &sigset, NULL);
+    // // Now let's block SIGUSR1
+    // sigset_t sigset;
+    // sigemptyset(&sigset);
+    // sigaddset(&sigset, SIGUSR1);
+    // sigprocmask(SIG_BLOCK, &sigset, NULL);
 
-    // SIGUSR1 is now blocked and pending -- this call to sigwait will return
-    // immediately
-    int sig;
-    int result = sigwait(&sigset, &sig);
-    if(result == 0)
-        printf("sigwait got signal: %d\n", sig);
+    // // SIGUSR1 is now blocked and pending -- this call to sigwait will return
+    // // immediately
+    // int sig;
+    // int result = sigwait(&sigset, &sig);
+    // if(result == 0)
+    //     printf("sigwait got signal: %d\n", sig);
 
-    isStart=true;
+   isStop=false;
 
+   //int sig=SIGINT;
     // acquire a single snapshot
     while(!isStop) {
-        if(isStart){
-            // make sure that capture is implemented periodically
-            auto lastSnapTime = std::chrono::steady_clock::now();
+        // // Now let's block SIGUSR1
+        // sigset_t sigset;
+        // sigemptyset(&sigset);
+        // sigaddset(&sigset, SIGUSR1);
+        // sigaddset(&sigset, SIGUSR2);
+        // sigprocmask(SIG_BLOCK, &sigset, NULL);
 
-            if (MutexForCopyData.try_lock_for(std::chrono::milliseconds(5))){
-                FCSubscriptionDataTmp=fcSubscription->getSubscriptionData();
-                MutexForCopyData.unlock();
-            }
+        // // SIGUSR1 is now blocked and pending -- this call to sigwait will return
+        // // immediately    
+        // int result = sigwait(&sigset, &sig);
+        // //if(result == 0)
+        // //    printf("sigwait got signal: %d\n", sig);
+        // isStart=true;
+
+        //if(sig==SIGUSR1){
+            // make sure that capture is implemented periodically
+            //auto lastSnapTime = std::chrono::system_clock::now();
+
+        sem_wait(trig);          /* block until controller fires a trigger */
+
+        /* check residual semaphore value to distinguish print vs exit */
+        int val = 0;
+        sem_getvalue(trig, &val);
+
+        if (val >= 1) {
+            /* exit trigger: drain the extra post, ack, and leave */
+            sem_wait(trig);
+            break;
+        }    
+
+
+        if (MutexForCopyData.try_lock_for(std::chrono::milliseconds(5))){
+            FCSubscriptionDataTmp=fcSubscription->getSubscriptionData();
+            MutexForCopyData.unlock();
+        }
 
             //cout<<"QUA1:"<<pFCSubscriptionData->Quaternion.q0<<endl;
             //cout<<"QUA1:"<<FCSubscriptionDataTmp.Quaternion.q0<<endl;
@@ -607,16 +656,16 @@ T_DjiReturnCode DJI_M300RTK::run()
             //printf("QUA1: %lf \n",pFCSubscriptionData->Quaternion.q0);
             //printf("QUA2: %lf \n",FCSubscriptionDataTmp.Quaternion.q0);
 
-            if (fileRecorder->is_open()){
+        if (fileRecorder->is_open()){
 
-                // Get the current time from the system clock
-                auto now = std::chrono::system_clock::now();
-                // Convert the current time to time since epoch
-                auto duration = now.time_since_epoch();
-                // Convert duration to milliseconds
-                auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+            // Get the current time from the system clock
+            auto now = std::chrono::system_clock::now();
+            // Convert the current time to time since epoch
+            auto duration = now.time_since_epoch();
+            // Convert duration to milliseconds
+            auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
                 
-                (*fileRecorder) << milliseconds <<", " //Record system time ms
+            (*fileRecorder) << milliseconds <<", " //Record system time ms
                 //"Quaternion (w,x,y,z), " 
                 << FCSubscriptionDataTmp.Quaternion.q0 <<", "   
                 << FCSubscriptionDataTmp.Quaternion.q1 <<", "
@@ -739,23 +788,35 @@ T_DjiReturnCode DJI_M300RTK::run()
                 << FCSubscriptionDataTmp.ImuAttiNaviDataWithTimestampTimestamp.microsecond 
                 <<'\n';
         
-            }
+            //}
 
             //Wait for keeping the period
-            const auto timeSinceLastSnap = std::chrono::steady_clock::now() - lastSnapTime;
+            //const auto timeSinceLastSnap = std::chrono::system_clock::now() - lastSnapTime;
 
-            if (timeSinceLastSnap < pollPeriodSpan){
-                auto timeToWait = pollPeriodSpan - timeSinceLastSnap;
-                std::this_thread::sleep_for(timeToWait);
-            }            
+            //if (timeSinceLastSnap < pollPeriodSpan){
+            //    auto timeToWait = pollPeriodSpan - timeSinceLastSnap;
+            //    std::this_thread::sleep_for(timeToWait);
+            //}  
+            isStart=false;          
         } //if(isStart){
     } //while(!isStop) {
+
+    sem_close(trig);
+    sem_close(ack);
 
     return DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS;
 }
 
 T_DjiReturnCode DJI_M300RTK::disConnect()
 {
+     //Close File for records
+    if (!(*fileRecorder)){
+        throw std::runtime_error("Error writing to file: " + fileName);
+        return false;
+    }
+    fileRecorder->close();
+    delete fileRecorder;
+    
     T_DjiReturnCode djiStat;
     T_DjiOsalHandler *osalHandler = DjiPlatform_GetOsalHandler();
 

@@ -37,6 +37,17 @@
 #include <chrono>
 #include <fc_subscription/FC_Subscription.hpp>
 
+//SYNCH
+    #include <iostream>
+    #include <cstdlib>
+    #include <semaphore.h>
+    #include <fcntl.h>
+    #include <iostream>
+    #include <fstream>
+    #include <signal.h>
+    #include <thread>
+    #include <chrono>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -74,6 +85,12 @@ private:
     static T_DjiReturnCode DjiUser_LocalWrite(const uint8_t *data, uint16_t dataLen);
     static T_DjiReturnCode DjiUser_FillInUserInfo(T_DjiUserInfo *userInfo);
     static T_DjiReturnCode DjiUser_LocalWriteFsInit(const char *path);
+
+public:
+    //SYNCH
+    /* open semaphores already created by the controller */
+    sem_t* trig;
+    sem_t* ack;
 };
 
 /* Exported functions --------------------------------------------------------*/
