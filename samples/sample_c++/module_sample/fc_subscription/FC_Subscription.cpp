@@ -114,9 +114,24 @@ static T_DjiReturnCode Dji_FcSubscriptionReceiveImuAttiNaviDataWithTimestampCall
 
 /* Exported functions definition ---------------------------------------------*/
 
-
  FC_SubscriptionData FC_Subscription::getSubscriptionData()
  {
+//     T_DjiFcSubscriptionVelocity *Velocity;
+//     T_DjiDataTimestamp timestamp;
+//     T_DjiReturnCode djiStat;
+
+//     djiStat = DjiFcSubscription_GetLatestValueOfTopic(DJI_FC_SUBSCRIPTION_TOPIC_VELOCITY,
+//                                                   (uint8_t *) &Velocity,
+//                                                   sizeof(T_DjiFcSubscriptionVelocity),
+//                                                   &timestamp);
+//     fcSubscriptionData.Velocity=(*Velocity);
+//     fcSubscriptionData.VelocityTimestamp=(timestamp);
+//     if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+//         USER_LOG_ERROR("get value of topic velocity error.");
+//     } else {
+//         USER_LOG_INFO("velocity: ");
+// }
+
     return fcSubscriptionData;
  }
 
