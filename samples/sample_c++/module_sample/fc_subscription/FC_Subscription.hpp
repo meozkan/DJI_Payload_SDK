@@ -115,6 +115,16 @@ typedef struct FC_DATA {
   ///uint32_t timestamp;
   T_DjiFcSubscriptionImuAttiNaviDataWithTimestamp ImuAttiNaviDataWithTimestamp;
   T_DjiDataTimestamp ImuAttiNaviDataWithTimestampTimestamp;
+  // int16_t roll;     /*!< [-10000,10000] */
+  //  int16_t pitch;    /*!< [-10000,10000] */
+  //  int16_t yaw;      /*!< [-10000,10000] */
+  //  int16_t throttle; /*!< [-10000,10000] */
+  //  int16_t mode;     /*!< [-10000,10000] */
+  //  /*!< M100 [P: -8000, A: 0, F: 8000] */
+  //  int16_t gear;     /*!< [-10000,10000] */
+  //  /*!< M100 [Up: -10000, Down: -4545] */
+  T_DjiFcSubscriptionRC RC;
+  T_DjiDataTimestamp RCTimestamp;
 } FC_SubscriptionData;
 
 

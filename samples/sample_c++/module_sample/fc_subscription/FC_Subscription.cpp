@@ -58,6 +58,7 @@ static T_DjiReturnCode Dji_FcSubscriptionReceiveCompassCallback(const uint8_t *d
 static T_DjiReturnCode Dji_FcSubscriptionReceiveFlightStatusCallback(const uint8_t *data, uint16_t dataSize, const T_DjiDataTimestamp *timestamp);
 static T_DjiReturnCode Dji_FcSubscriptionReceivePositionVOCallback(const uint8_t *data, uint16_t dataSize, const T_DjiDataTimestamp *timestamp);
 static T_DjiReturnCode Dji_FcSubscriptionReceiveImuAttiNaviDataWithTimestampCallback(const uint8_t *data, uint16_t dataSize, const T_DjiDataTimestamp *timestamp);
+static T_DjiReturnCode Dji_FcSubscriptionReceiveRCCallback(const uint8_t *data, uint16_t dataSize, const T_DjiDataTimestamp *timestamp);
 
 /*
 + Quaternion DJI_FC_SUBSCRIPTION_TOPIC_QUATERNION
@@ -472,6 +473,27 @@ T_DjiReturnCode FC_Subscription::SubscribeTopicCompass(DjiReceiveDataOfTopicCall
 }
 
 //T_DjiReturnCode SubscribeTopicRC(DjiReceiveDataOfTopicCallback callback, bool subscribe_unsubscribe=true);
+T_DjiReturnCode FC_Subscription::SubscribeTopicRC(DjiReceiveDataOfTopicCallback callback, bool subscribe_unsubscribe)
+{
+    T_DjiReturnCode djiStat;
+
+    if(subscribe_unsubscribe){
+        djiStat = DjiFcSubscription_SubscribeTopic(DJI_FC_SUBSCRIPTION_TOPIC_RC, DJI_DATA_SUBSCRIPTION_TOPIC_50_HZ,
+            Dji_FcSubscriptionReceiveRCCallback);
+        if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+            USER_LOG_ERROR("Subscribe topic RC error.");
+            return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+        }
+    }
+    else{
+        djiStat = DjiFcSubscription_UnSubscribeTopic(DJI_FC_SUBSCRIPTION_TOPIC_RC);
+        if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+            USER_LOG_ERROR("UnSubscribe topic FlightRCStatus error.");
+            return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+        }
+    }
+}
+
 
 //T_DjiReturnCode SubscribeTopicGimbalAngles(DjiReceiveDataOfTopicCallback callback, bool subscribe_unsubscribe=true);
 
@@ -770,7 +792,15 @@ static T_DjiReturnCode Dji_FcSubscriptionReceiveImuAttiNaviDataWithTimestampCall
     USER_UTIL_UNUSED(dataSize);
     return DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS;
 }
-
+static T_DjiReturnCode Dji_FcSubscriptionReceiveRCCallback(const uint8_t *data, uint16_t dataSize, const T_DjiDataTimestamp *timestamp)
+{
+    T_DjiFcSubscriptionRC *RC = (T_DjiFcSubscriptionRC *) data;
+    fcSubscriptionData.RC=(*RC);
+    fcSubscriptionData.RCTimestamp=(*timestamp);
+    
+    USER_UTIL_UNUSED(dataSize);
+    return DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS;
+}
 
 /****************** (C) COPYRIGHT DJI Innovations *****END OF FILE****/
 

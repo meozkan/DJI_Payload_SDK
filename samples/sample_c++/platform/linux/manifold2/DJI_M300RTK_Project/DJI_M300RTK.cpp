@@ -531,6 +531,13 @@ T_DjiReturnCode DJI_M300RTK::connect()
         return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
     }  
 
+    USER_LOG_INFO("--->Subscribe the topics of RC");
+    fcSubscription->SubscribeTopicRC(NULL);
+    if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+        USER_LOG_ERROR("Subscribe topic RC.");
+        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    }  
+
      //-------------------------
     // //Configure the signal
     // fd_set readfds;
@@ -584,7 +591,9 @@ T_DjiReturnCode DJI_M300RTK::connect()
                         << "PositionVO (x,y,z), "
                         << "PositionVOTimerstamp(millisec,microsec), "
                         << "ImuAttiNaviDataWithTimestamp (pn_x, pn_y, pn_z, vn_x, vn_y, vn_z, an_x, an_y, an_z, q1, q2, q3, q4, resv, cnt), "
-                        << "ImuAttiNaviDataWithTimestampTimerstamp(millisec,microsec)"
+                        << "ImuAttiNaviDataWithTimestampTimerstamp(millisec,microsec), "
+                        << "RC (roll, yaw, throttle, mode, gear), "
+                        << "RCTimerstamp(millisec,microsec)"
                         <<'\n';
 
     }
@@ -785,7 +794,15 @@ T_DjiReturnCode DJI_M300RTK::run()
                 << FCSubscriptionDataTmp.ImuAttiNaviDataWithTimestamp.cnt <<", "
                 // "ImuAttiNaviDataWithTimestampTimerstamp(millisec,microsec), "
                 << FCSubscriptionDataTmp.ImuAttiNaviDataWithTimestampTimestamp.millisecond << ", "
-                << FCSubscriptionDataTmp.ImuAttiNaviDataWithTimestampTimestamp.microsecond 
+                << FCSubscriptionDataTmp.ImuAttiNaviDataWithTimestampTimestamp.microsecond << ", "
+                << FCSubscriptionDataTmp.RC.roll <<", "
+                << FCSubscriptionDataTmp.RC.pitch <<", "
+                << FCSubscriptionDataTmp.RC.yaw <<", "
+                << FCSubscriptionDataTmp.RC.throttle <<", "
+                << FCSubscriptionDataTmp.RC.mode <<", "
+                << FCSubscriptionDataTmp.RC.gear <<", "
+                << FCSubscriptionDataTmp.RCTimestamp.millisecond <<", "
+                << FCSubscriptionDataTmp.RCTimestamp.microsecond 
                 <<'\n';
         
             //}
@@ -958,6 +975,14 @@ T_DjiReturnCode DJI_M300RTK::disConnect()
     } 
      else
         USER_LOG_INFO("-->UnSubscribe the topic ImuAttiNaviDataWithTimestamp...");
+
+    djiStat = fcSubscription->SubscribeTopicRC(NULL,false);
+    if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+        USER_LOG_ERROR("UnSubscribe topic RC error.");
+        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    } 
+    else
+        USER_LOG_INFO("-->UnSubscribe the topic RC...");
 
     USER_LOG_INFO("--> Deinit fc subscription module");
 
