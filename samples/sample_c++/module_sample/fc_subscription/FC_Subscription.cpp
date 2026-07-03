@@ -234,7 +234,7 @@ T_DjiReturnCode FC_Subscription::SubscribeTopicVelocity(DjiReceiveDataOfTopicCal
     T_DjiReturnCode djiStat;
 
     if(subscribe_unsubscribe){
-        djiStat = DjiFcSubscription_SubscribeTopic(DJI_FC_SUBSCRIPTION_TOPIC_VELOCITY, DJI_DATA_SUBSCRIPTION_TOPIC_50_HZ,
+        djiStat = DjiFcSubscription_SubscribeTopic(DJI_FC_SUBSCRIPTION_TOPIC_VELOCITY, DJI_DATA_SUBSCRIPTION_TOPIC_200_HZ,
             Dji_FcSubscriptionReceiveVelocityCallback);
         if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
             USER_LOG_ERROR("Subscribe topic Velocity error.");

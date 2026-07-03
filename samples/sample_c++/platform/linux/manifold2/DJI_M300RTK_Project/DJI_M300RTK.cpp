@@ -412,33 +412,33 @@ T_DjiReturnCode DJI_M300RTK::connect()
         return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
     }
 
-    USER_LOG_INFO("--->Subscribe the topics of quaternion");
-    fcSubscription->SubscribeTopicQuaternian(NULL);
-    if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("Subscribe topic quaternion error.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
+    // USER_LOG_INFO("--->Subscribe the topics of quaternion");
+    // fcSubscription->SubscribeTopicQuaternian(NULL);
+    // if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("Subscribe topic quaternion error.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
 
-    USER_LOG_INFO("--->Subscribe the topics of acceleration ground");
-    fcSubscription->SubscribeTopicAccelerationGround(NULL);
-    if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("Subscribe topic acceleration ground error.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
+    // USER_LOG_INFO("--->Subscribe the topics of acceleration ground");
+    // fcSubscription->SubscribeTopicAccelerationGround(NULL);
+    // if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("Subscribe topic acceleration ground error.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
 
-    USER_LOG_INFO("--->Subscribe the topics of acceleration body");
-    fcSubscription->SubscribeTopicAccelerationBody(NULL);
-    if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("Subscribe topic acceleration body.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
+    // USER_LOG_INFO("--->Subscribe the topics of acceleration body");
+    // fcSubscription->SubscribeTopicAccelerationBody(NULL);
+    // if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("Subscribe topic acceleration body.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
 
-    USER_LOG_INFO("--->Subscribe the topics of acceleration raw");
-    fcSubscription->SubscribeTopicAccelerationRaw(NULL);
-      if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("Subscribe topic acceleration raw.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
+    // USER_LOG_INFO("--->Subscribe the topics of acceleration raw");
+    // fcSubscription->SubscribeTopicAccelerationRaw(NULL);
+    //   if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("Subscribe topic acceleration raw.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
 
     USER_LOG_INFO("--->Subscribe the topics of velocity");
     fcSubscription->SubscribeTopicVelocity(NULL);
@@ -447,89 +447,89 @@ T_DjiReturnCode DJI_M300RTK::connect()
         return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
     }
 
-    USER_LOG_INFO("--->Subscribe the topics of angular rate fusion");
-    fcSubscription->SubscribeTopicAngularRateFusioned(NULL);
-      if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("Subscribe topic angular rate fusion.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
+    // USER_LOG_INFO("--->Subscribe the topics of angular rate fusion");
+    // fcSubscription->SubscribeTopicAngularRateFusioned(NULL);
+    //   if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("Subscribe topic angular rate fusion.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
 
-    USER_LOG_INFO("--->Subscribe the topics of angular rate raw");
-    fcSubscription->SubscribeTopicAngularRateRaw(NULL);
-      if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("Subscribe topic angular rate raw.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
+    // USER_LOG_INFO("--->Subscribe the topics of angular rate raw");
+    // fcSubscription->SubscribeTopicAngularRateRaw(NULL);
+    //   if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("Subscribe topic angular rate raw.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
 
-    USER_LOG_INFO("--->Subscribe the topics of altitude fused");
-    fcSubscription->SubscribeTopicAltitudeFused(NULL);
-      if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("Subscribe topic altitute fused.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
+    // USER_LOG_INFO("--->Subscribe the topics of altitude fused");
+    // fcSubscription->SubscribeTopicAltitudeFused(NULL);
+    //   if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("Subscribe topic altitute fused.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
 
-    USER_LOG_INFO("--->Subscribe the topics of altitude barometer");
-    fcSubscription->SubscribeTopicAltitudeBarometer(NULL);
-      if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("Subscribe topic altitute barometer.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
+    // USER_LOG_INFO("--->Subscribe the topics of altitude barometer");
+    // fcSubscription->SubscribeTopicAltitudeBarometer(NULL);
+    //   if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("Subscribe topic altitute barometer.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
 
-    USER_LOG_INFO("--->Subscribe the topics of altitude of home point");
-    fcSubscription->SubscribeTopicAltitudeOfHomePoint(NULL);
-      if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("Subscribe topic altitute of home point.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
+    // USER_LOG_INFO("--->Subscribe the topics of altitude of home point");
+    // fcSubscription->SubscribeTopicAltitudeOfHomePoint(NULL);
+    //   if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("Subscribe topic altitute of home point.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
 
-    USER_LOG_INFO("--->Subscribe the topics of height fusion");
-    fcSubscription->SubscribeTopicHeightFusion(NULL);
-      if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("Subscribe topic height fusion.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
+    // USER_LOG_INFO("--->Subscribe the topics of height fusion");
+    // fcSubscription->SubscribeTopicHeightFusion(NULL);
+    //   if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("Subscribe topic height fusion.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
 
-    USER_LOG_INFO("--->Subscribe the topics of height relative");
-    fcSubscription->SubscribeTopicHeightRelative(NULL);
-      if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("Subscribe topic height relative.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
+    // USER_LOG_INFO("--->Subscribe the topics of height relative");
+    // fcSubscription->SubscribeTopicHeightRelative(NULL);
+    //   if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("Subscribe topic height relative.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
 
-    USER_LOG_INFO("--->Subscribe the topics of position fused");
-    fcSubscription->SubscribeTopicPositionFused(NULL);
-      if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("Subscribe topic position fused.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
+    // USER_LOG_INFO("--->Subscribe the topics of position fused");
+    // fcSubscription->SubscribeTopicPositionFused(NULL);
+    //   if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("Subscribe topic position fused.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
 
-    USER_LOG_INFO("--->Subscribe the topics of flight status");
-    fcSubscription->SubscribeTopicFlightStatus(NULL);
-      if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("Subscribe topic flight status.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
+    // USER_LOG_INFO("--->Subscribe the topics of flight status");
+    // fcSubscription->SubscribeTopicFlightStatus(NULL);
+    //   if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("Subscribe topic flight status.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
 
-    USER_LOG_INFO("--->Subscribe the topics of compass");
-    fcSubscription->SubscribeTopicCompass(NULL);
-      if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("Subscribe topic compass.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
+    // USER_LOG_INFO("--->Subscribe the topics of compass");
+    // fcSubscription->SubscribeTopicCompass(NULL);
+    //   if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("Subscribe topic compass.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
 
-    USER_LOG_INFO("--->Subscribe the topics of positionVO");
-    fcSubscription->SubscribeTopicPositionVO(NULL);
-      if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("Subscribe topic positionVO.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
+    // USER_LOG_INFO("--->Subscribe the topics of positionVO");
+    // fcSubscription->SubscribeTopicPositionVO(NULL);
+    //   if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("Subscribe topic positionVO.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
 
-    USER_LOG_INFO("--->Subscribe the topics of ImuAttiNaviDataWithTime");
-    fcSubscription->SubscribeTopicImuAttiNaviDataWithTimestamp(NULL);
-      if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("Subscribe topic ImuAttiNaviDataWithTime.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }  
+    // USER_LOG_INFO("--->Subscribe the topics of ImuAttiNaviDataWithTime");
+    // fcSubscription->SubscribeTopicImuAttiNaviDataWithTimestamp(NULL);
+    //   if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("Subscribe topic ImuAttiNaviDataWithTime.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }  
 
      //-------------------------
     // //Configure the signal
@@ -820,40 +820,40 @@ T_DjiReturnCode DJI_M300RTK::disConnect()
     T_DjiReturnCode djiStat;
     T_DjiOsalHandler *osalHandler = DjiPlatform_GetOsalHandler();
 
-    USER_LOG_INFO("--->Unsubscribe the topics");
-    djiStat = fcSubscription->SubscribeTopicQuaternian(NULL,false);
-    if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("UnSubscribe topic quaternion error.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
-    else
-        USER_LOG_INFO("-->UnSubscribe the topic quaternion...");
+    // USER_LOG_INFO("--->Unsubscribe the topics");
+    // djiStat = fcSubscription->SubscribeTopicQuaternian(NULL,false);
+    // if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("UnSubscribe topic quaternion error.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
+    // else
+    //     USER_LOG_INFO("-->UnSubscribe the topic quaternion...");
 
-    djiStat = fcSubscription->SubscribeTopicAccelerationGround(NULL,false);
-    if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("UnSubscribe topic AccelerationGround error.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
-    else
-        USER_LOG_INFO("-->UnSubscribe the topic AccelerationGround...");
+    // djiStat = fcSubscription->SubscribeTopicAccelerationGround(NULL,false);
+    // if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("UnSubscribe topic AccelerationGround error.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
+    // else
+    //     USER_LOG_INFO("-->UnSubscribe the topic AccelerationGround...");
 
 
 
-    djiStat = fcSubscription->SubscribeTopicAccelerationBody(NULL,false);
-    if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("UnSubscribe topic AccelerationBody error.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
-     else
-        USER_LOG_INFO("-->UnSubscribe the topic AccelerationBody...");
+    // djiStat = fcSubscription->SubscribeTopicAccelerationBody(NULL,false);
+    // if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("UnSubscribe topic AccelerationBody error.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
+    //  else
+    //     USER_LOG_INFO("-->UnSubscribe the topic AccelerationBody...");
 
-    djiStat = fcSubscription->SubscribeTopicAccelerationRaw(NULL,false);
-    if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("UnSubscribe topic AccelerationRaw error.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
-     else
-        USER_LOG_INFO("-->UnSubscribe the topic AccelerationRaw...");
+    // djiStat = fcSubscription->SubscribeTopicAccelerationRaw(NULL,false);
+    // if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("UnSubscribe topic AccelerationRaw error.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
+    //  else
+    //     USER_LOG_INFO("-->UnSubscribe the topic AccelerationRaw...");
 
     djiStat = fcSubscription->SubscribeTopicVelocity(NULL,false);
     if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
@@ -863,101 +863,101 @@ T_DjiReturnCode DJI_M300RTK::disConnect()
      else
         USER_LOG_INFO("-->UnSubscribe the topic Velocity...");
 
-    djiStat = fcSubscription->SubscribeTopicAngularRateFusioned(NULL,false);
-    if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("UnSubscribe topic AngularRateFusioned error.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
-     else
-        USER_LOG_INFO("-->UnSubscribe the topic AngularRateFusioned...");
+    // djiStat = fcSubscription->SubscribeTopicAngularRateFusioned(NULL,false);
+    // if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("UnSubscribe topic AngularRateFusioned error.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
+    //  else
+    //     USER_LOG_INFO("-->UnSubscribe the topic AngularRateFusioned...");
 
-    djiStat = fcSubscription->SubscribeTopicAngularRateRaw(NULL,false);
-    if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("UnSubscribe topic AngularRateRaw error.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
-     else
-        USER_LOG_INFO("-->UnSubscribe the topic AngularRateRaw...");
+    // djiStat = fcSubscription->SubscribeTopicAngularRateRaw(NULL,false);
+    // if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("UnSubscribe topic AngularRateRaw error.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
+    //  else
+    //     USER_LOG_INFO("-->UnSubscribe the topic AngularRateRaw...");
 
-    djiStat = fcSubscription->SubscribeTopicAltitudeFused(NULL,false);
-    if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("UnSubscribe topic AltitudeFused error.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
-     else
-        USER_LOG_INFO("-->UnSubscribe the topic AltitudeFused...");
+    // djiStat = fcSubscription->SubscribeTopicAltitudeFused(NULL,false);
+    // if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("UnSubscribe topic AltitudeFused error.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
+    //  else
+    //     USER_LOG_INFO("-->UnSubscribe the topic AltitudeFused...");
 
-    djiStat = fcSubscription->SubscribeTopicAltitudeBarometer(NULL,false);
-    if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("UnSubscribe topic AltitudeBarometer error.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
-     else
-        USER_LOG_INFO("-->UnSubscribe the topic AltitudeBarometer...");
+    // djiStat = fcSubscription->SubscribeTopicAltitudeBarometer(NULL,false);
+    // if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("UnSubscribe topic AltitudeBarometer error.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
+    //  else
+    //     USER_LOG_INFO("-->UnSubscribe the topic AltitudeBarometer...");
 
-    djiStat = fcSubscription->SubscribeTopicAltitudeOfHomePoint(NULL,false);
-    if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("UnSubscribe topic AltitudeOfHomePoint error.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
-     else
-        USER_LOG_INFO("-->UnSubscribe the topic AltitudeOfHomePoint...");
+    // djiStat = fcSubscription->SubscribeTopicAltitudeOfHomePoint(NULL,false);
+    // if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("UnSubscribe topic AltitudeOfHomePoint error.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
+    //  else
+    //     USER_LOG_INFO("-->UnSubscribe the topic AltitudeOfHomePoint...");
 
-    djiStat = fcSubscription->SubscribeTopicHeightFusion(NULL,false);
-    if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("UnSubscribe topic HeightFusion error.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
-     else
-        USER_LOG_INFO("-->UnSubscribe the topic HeightFusion...");
+    // djiStat = fcSubscription->SubscribeTopicHeightFusion(NULL,false);
+    // if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("UnSubscribe topic HeightFusion error.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
+    //  else
+    //     USER_LOG_INFO("-->UnSubscribe the topic HeightFusion...");
 
-    djiStat = fcSubscription->SubscribeTopicHeightRelative(NULL,false);
-    if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("UnSubscribe topic HeightRelative error.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    } 
-     else
-        USER_LOG_INFO("-->UnSubscribe the topic HeightRelative..."); 
+    // djiStat = fcSubscription->SubscribeTopicHeightRelative(NULL,false);
+    // if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("UnSubscribe topic HeightRelative error.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // } 
+    //  else
+    //     USER_LOG_INFO("-->UnSubscribe the topic HeightRelative..."); 
     
-    djiStat = fcSubscription->SubscribeTopicPositionFused(NULL,false);
-    if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("UnSubscribe topic PositionFused error.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
-     else
-        USER_LOG_INFO("-->UnSubscribe the topic PositionFused...");  
+    // djiStat = fcSubscription->SubscribeTopicPositionFused(NULL,false);
+    // if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("UnSubscribe topic PositionFused error.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
+    //  else
+    //     USER_LOG_INFO("-->UnSubscribe the topic PositionFused...");  
 
-    djiStat = fcSubscription->SubscribeTopicFlightStatus(NULL,false);
-    if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("UnSubscribe topic FlightStatus error.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
-     else
-        USER_LOG_INFO("-->UnSubscribe the topic FlightStatus...");  
+    // djiStat = fcSubscription->SubscribeTopicFlightStatus(NULL,false);
+    // if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("UnSubscribe topic FlightStatus error.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
+    //  else
+    //     USER_LOG_INFO("-->UnSubscribe the topic FlightStatus...");  
 
-    djiStat = fcSubscription->SubscribeTopicCompass(NULL,false);
-    if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("UnSubscribe topic Compass error.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    }
-     else
-        USER_LOG_INFO("-->UnSubscribe the topic Compass..."); 
+    // djiStat = fcSubscription->SubscribeTopicCompass(NULL,false);
+    // if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("UnSubscribe topic Compass error.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // }
+    //  else
+    //     USER_LOG_INFO("-->UnSubscribe the topic Compass..."); 
 
-    djiStat = fcSubscription->SubscribeTopicPositionVO(NULL,false);
-    if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("UnSubscribe topic PositionVO error.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    } 
-     else
-        USER_LOG_INFO("-->UnSubscribe the topic PositionVO...");
+    // djiStat = fcSubscription->SubscribeTopicPositionVO(NULL,false);
+    // if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("UnSubscribe topic PositionVO error.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // } 
+    //  else
+    //     USER_LOG_INFO("-->UnSubscribe the topic PositionVO...");
 
-    djiStat = fcSubscription->SubscribeTopicImuAttiNaviDataWithTimestamp(NULL,false);
-    if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("UnSubscribe topic ImuAttiNaviDataWithTimestamp error.");
-        return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
-    } 
-     else
-        USER_LOG_INFO("-->UnSubscribe the topic ImuAttiNaviDataWithTimestamp...");
+    // djiStat = fcSubscription->SubscribeTopicImuAttiNaviDataWithTimestamp(NULL,false);
+    // if (djiStat != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
+    //     USER_LOG_ERROR("UnSubscribe topic ImuAttiNaviDataWithTimestamp error.");
+    //     return DJI_ERROR_SYSTEM_MODULE_CODE_UNKNOWN;
+    // } 
+    //  else
+    //     USER_LOG_INFO("-->UnSubscribe the topic ImuAttiNaviDataWithTimestamp...");
 
     USER_LOG_INFO("--> Deinit fc subscription module");
 
